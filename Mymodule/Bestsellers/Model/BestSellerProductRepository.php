@@ -47,7 +47,7 @@ class BestSellerProductRepository implements \Mymodule\Bestsellers\Api\BestSelle
     /**
      * {@inheritdoc}
      */
-    public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
+    public function getList($fromDate, $toDate, \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
     {
         $collection = $this->collectionFactory->create();
         $this->extensionAttributesJoinProcessor->process($collection);

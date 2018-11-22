@@ -14,8 +14,10 @@ interface BestSellerProductRepositoryInterface
     /**
      * Get product list
      *
+     * @param string $fromDate
+     * @param string $toDate
      * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
      * @return \Magento\Catalog\Api\Data\ProductSearchResultsInterface
      */
-    public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria);
+    public function getList($fromDate, $toDate, \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria);
 }
