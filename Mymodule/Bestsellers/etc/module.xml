@@ -7,9 +7,13 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Mymodule_Bestsellers" setup_version="1.0.0"/>
+    <module name="Mymodule_Bestsellers" setup_version="1.0.0">
         <sequence>
+            <module name="Magento_Reports"/>
+            <module name="Magento_Customer"/>
             <module name="Magento_Catalog"/>
+            <module name="Magento_Sales"/>
+            <module name="Magento_Quote"/>
         </sequence>
     </module>
 </config>
