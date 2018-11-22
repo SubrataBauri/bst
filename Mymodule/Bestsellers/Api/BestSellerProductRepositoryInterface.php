@@ -5,6 +5,7 @@
  * @package Mymodule_Bestsellers
  */
 namespace Mymodule\Bestsellers\Api;
+
 /**
  * @api
  */
