@@ -43,4 +43,23 @@ class BestSellerProductRepository implements \Mymodule\Bestsellers\Api\BestSelle
         $this->collectionProcessor = $collectionProcessor;
         $this->searchResultsFactory = $searchResultsFactory;
     }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
+    {
+        $collection = $this->collectionFactory->create();
+        $this->extensionAttributesJoinProcessor->process($collection);
+        $collection->addAttributeToSelect('*');
+        $collection->joinAttribute('status', 'catalog_product/status', 'entity_id', null, 'inner');
+        $collection->joinAttribute('visibility', 'catalog_product/visibility', 'entity_id', null, 'inner');
+        $this->collectionProcessor->process($searchCriteria,$collection);
+        $collection->load();
+        $searchResult = $this->searchResultsFactory->create();
+        $searchResult->setSearchCriteria($searchCriteria);
+        $searchResult->setItems($collection->getItems());
+        $searchResult->setTotalCount($collection->getSize());
+        return $searchResult;
+    }
 }
