@@ -12,6 +12,8 @@ namespace Mymodule\Bestsellers\Model;
  */
 class BestSellerProductRepository implements \Mymodule\Bestsellers\Api\BestSellerProductRepositoryInterface
 {
+    protected $defaultPageSize = 1000;
+
     /**
      * @var \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory
      */
