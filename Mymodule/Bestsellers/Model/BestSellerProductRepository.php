@@ -82,7 +82,37 @@ class BestSellerProductRepository implements \Mymodule\Bestsellers\Api\BestSelle
         $searchResult = $this->searchResultsFactory->create();
         $searchResult->setSearchCriteria($searchCriteria);
         $searchResult->setItems($collection->getItems());
-        $searchResult->setTotalCount($collection->getSize());       
+        $searchResult->setTotalCount($collection->getSize());
         return $searchResult;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAllList()
+    {
+        $productIds = [];
+        $pageSize = $this->defaultPageSize;
+
+        $bestSellersCollection = $this->bestSellersCollectionFactory->create();
+        $bestSellersCollection->setModel(\Magento\Catalog\Model\Product::class);
+        $bestSellersCollection->setPageSize($pageSize)->setCurPage(1);
+        $bestSellersCollection->load();
+
+        $productIds = $bestSellersCollection->getColumnValues('product_id');
+
+        $collection = $this->collectionFactory->create();
+        $this->extensionAttributesJoinProcessor->process($collection);
+        $collection->addAttributeToSelect('*');
+        $collection->addIdFilter($productIds);
+        $collection->joinAttribute('status', 'catalog_product/status', 'entity_id', null, 'inner');
+        $collection->joinAttribute('visibility', 'catalog_product/visibility', 'entity_id', null, 'inner');
+
+        $collection->load();
+
+        $searchResult = $this->searchResultsFactory->create();
+        $searchResult->setItems($collection->getItems());
+        $searchResult->setTotalCount($collection->getSize());
+        return $searchResult;
+     }
 }

@@ -7,6 +7,12 @@
  */
 -->
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route method="GET" url="/V1/products/bestsellers/">
+        <service class="Mymodule\Bestsellers\Api\BestSellerProductRepositoryInterface" method="getAllList"/>
+        <resources>
+            <resource ref="Magento_Catalog::products" />
+        </resources>
+    </route>
     <route method="GET" url="/V1/products/bestsellers/fromDate/:fromDate/toDate/:toDate">
         <service class="Mymodule\Bestsellers\Api\BestSellerProductRepositoryInterface" method="getList"/>
         <resources>
