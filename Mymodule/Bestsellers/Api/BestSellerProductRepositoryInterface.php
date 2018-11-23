@@ -12,7 +12,7 @@ namespace Mymodule\Bestsellers\Api;
 interface BestSellerProductRepositoryInterface
 {
     /**
-     * Get product list
+     * Get bestselling products - filtered by date range
      *
      * @param string $fromDate
      * @param string $toDate
@@ -22,7 +22,7 @@ interface BestSellerProductRepositoryInterface
     public function getList($fromDate, $toDate, \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria);
     
     /**
-     * Get All products list
+     * Get All bestselling products
      * 
      * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
      * @return \Magento\Catalog\Api\Data\ProductSearchResultsInterface
