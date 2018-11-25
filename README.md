@@ -11,8 +11,9 @@ This module creates Rest API endpoints to return Bestseller products.
 
 ===============================================================================================
 
-#### Sample Call
-> GET /V1/products/bestsellers/fromDate/2018-11-21/toDate/2018-11-25?searchCriteria[pageSize]=5
+#### Sample Calls
+
+> GET /V1/products/bestsellers/fromDate/2018-11-21/toDate/2018-11-25?searchCriteria[sortOrders][0][field]=discount_price&searchCriteria[sortOrders][0][direction]=DESC&searchCriteria[pageSize]=5
 
 
 #### Sample Output
