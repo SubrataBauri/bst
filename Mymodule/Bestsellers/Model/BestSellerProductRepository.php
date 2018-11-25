@@ -4,6 +4,7 @@
  * @copyright Copyright (c) 2018 Subrata Bauri
  * @package Mymodule_Bestsellers
  */
+
 namespace Mymodule\Bestsellers\Model;
 
 /**
@@ -52,33 +53,40 @@ class BestSellerProductRepository implements \Mymodule\Bestsellers\Api\BestSelle
         $this->searchResultsFactory = $searchResultsFactory;
         $this->bestSellersCollectionFactory = $bestSellersCollectionFactory;
     }
-    
+
     /**
      * {@inheritdoc}
      */
-    public function getList($fromDate, $toDate, \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
+    public function getList($fromDate, $toDate ,\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
     {
+
         $productIds = [];
         $pageSize = ($searchCriteria->getPageSize() === null) ? $searchCriteria->getPageSize(): $this->defaultPageSize;
-        
+
         $bestSellersCollection = $this->bestSellersCollectionFactory->create();
         $bestSellersCollection->setModel(\Magento\Catalog\Model\Product::class);
         $bestSellersCollection->setPeriod('year')->setDateRange($fromDate, $toDate);
         $bestSellersCollection->setPageSize($pageSize)->setCurPage(1);
         $bestSellersCollection->load();
-        
+
         $productIds = $bestSellersCollection->getColumnValues('product_id');
 
         $collection = $this->collectionFactory->create();
         $this->extensionAttributesJoinProcessor->process($collection);
+
         $collection->addAttributeToSelect('*');
-        $collection->addIdFilter($productIds);
+        $collection->addAttributeToFilter('entity_id',['in' => $productIds]);
+        $collection->addMinimalPrice()->addFinalPrice();
+        $collection->addExpressionAttributeToSelect(
+            'discount_price',
+            new \Zend_Db_Expr('(price_index.price  -  price_index.final_price)'),
+            'price');
         $collection->joinAttribute('status', 'catalog_product/status', 'entity_id', null, 'inner');
         $collection->joinAttribute('visibility', 'catalog_product/visibility', 'entity_id', null, 'inner');
-        
+
         $this->collectionProcessor->process($searchCriteria,$collection);
         $collection->load();
-        
+
         $searchResult = $this->searchResultsFactory->create();
         $searchResult->setSearchCriteria($searchCriteria);
         $searchResult->setItems($collection->getItems());
@@ -91,6 +99,7 @@ class BestSellerProductRepository implements \Mymodule\Bestsellers\Api\BestSelle
      */
     public function getAllList()
     {
+
         $productIds = [];
         $pageSize = $this->defaultPageSize;
 
@@ -105,14 +114,15 @@ class BestSellerProductRepository implements \Mymodule\Bestsellers\Api\BestSelle
         $this->extensionAttributesJoinProcessor->process($collection);
         $collection->addAttributeToSelect('*');
         $collection->addIdFilter($productIds);
+
         $collection->joinAttribute('status', 'catalog_product/status', 'entity_id', null, 'inner');
         $collection->joinAttribute('visibility', 'catalog_product/visibility', 'entity_id', null, 'inner');
 
         $collection->load();
-
         $searchResult = $this->searchResultsFactory->create();
         $searchResult->setItems($collection->getItems());
         $searchResult->setTotalCount($collection->getSize());
         return $searchResult;
-     }
+
+    }
 }
